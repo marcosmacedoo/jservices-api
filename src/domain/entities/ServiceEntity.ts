@@ -1,11 +1,11 @@
 export class ServiceEntity {
-    id: string
+    id?: string
     title: string
-    description: string
+    description?: string
     budget: number
-    status: string
-    created_at: string
-    updated_at: string
-    deadline: string
+    status?: string
+    created_at?: Date
+    updated_at?: Date
+    deadline: Date
     comments: string[]
 }
