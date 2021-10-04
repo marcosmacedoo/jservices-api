@@ -12,5 +12,6 @@ const serviceController = new ServiceController()
 
 serviceRoutes.get('/services', serviceController.index)
 serviceRoutes.get('/services/:idService', serviceController.show)
+serviceRoutes.post('/services', serviceController.create)
 
 export default serviceRoutes

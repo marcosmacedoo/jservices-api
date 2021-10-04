@@ -1,6 +1,8 @@
 import { Request, Response } from 'express'
+import { SaveServiceCommand } from '../../application/command/SaveServiceCommand'
 import { GetAllServicesQuery } from '../../application/query/GetAllServicesQuery'
 import { GetServiceQuery } from '../../application/query/GetServiceQuery'
+import { ServiceEntity } from '../../domain/entities/ServiceEntity'
 import { FirestoreServiceRepository } from '../../infrastructure/persistence/firestore/repositories/FirestoreServiceRepository'
 
 export class ServiceController {
@@ -26,9 +28,15 @@ export class ServiceController {
     }
 
     public async create(request: Request, response: Response) {
-        const firestoreServiceRepository = new FirestoreServiceRepository()
-        // const query = new (firestoreServiceRepository)
+        const service = request.body as ServiceEntity
 
-        return response.status(201).json()
+        const firestoreServiceRepository = new FirestoreServiceRepository()
+        const commandSaveService = new SaveServiceCommand(
+            firestoreServiceRepository
+        )
+
+        await commandSaveService.execute(service)
+
+        return response.status(201).json(service)
     }
 }

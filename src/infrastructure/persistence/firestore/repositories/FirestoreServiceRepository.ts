@@ -1,4 +1,4 @@
-import { response } from 'express'
+import { firestore } from 'firebase-admin'
 import { db } from '..'
 import { ServiceEntity } from '../../../../domain/entities/ServiceEntity'
 import { ServiceRepositoty } from '../../../../domain/repositories/ServiceRepository'
@@ -33,8 +33,15 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
     }
 
     public async save(service: ServiceEntity) {
-        service.created_at = new Date()
-        service.status = 'Aberto'
-        const servicesRef = await this.collection.add(service)
+        const serviceTemp = {
+            ...service,
+            created_at: new Date(),
+            updated_at: new Date(),
+            deadline: new Date(service.deadline),
+            status: 'Aberto',
+            comment: [],
+        }
+
+        await this.collection.add(serviceTemp)
     }
 }
