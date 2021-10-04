@@ -47,14 +47,15 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
     public async cancel(idService: string) {
         await this.collection
             .doc(idService)
-            .update({ status: 'Cancelado', deadline: new Date() })
+            .update({ status: 'cancelado', deadline: new Date() })
     }
 
     public async finished(idService: string) {
         await this.collection
             .doc(idService)
-            .update({ status: 'Finalizado', deadline: new Date() })
+            .update({ status: 'finalizado', deadline: new Date() })
     }
+
     public async comment(idService: string, commentary: string) {
         const serviceRef = this.collection.doc(idService)
 
@@ -62,13 +63,15 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
 
         const serviceData = serviceGet.data() as ServiceEntity
 
-        const { comments } = serviceData
+        if (serviceData.status?.toLowerCase() === 'aberto') {
+            const { comments } = serviceData
 
-        if (comments) {
-            const newComments = [...comments, commentary]
-            await serviceRef.update({ comments: newComments })
-        } else {
-            await serviceRef.update({ comments: [commentary] })
+            if (comments) {
+                const newComments = [...comments, commentary]
+                await serviceRef.update({ comments: newComments })
+            } else {
+                await serviceRef.update({ comments: [commentary] })
+            }
         }
     }
 }
