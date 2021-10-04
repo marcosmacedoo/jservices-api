@@ -17,5 +17,9 @@ serviceRoutes.put(
     '/services/:idService/edit/status/cancel',
     serviceController.editStatusToCancel
 )
+serviceRoutes.put(
+    '/services/:idService/edit/status/finished',
+    serviceController.editStatusToFinished
+)
 
 export default serviceRoutes

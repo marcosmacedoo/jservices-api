@@ -5,6 +5,6 @@ export interface ServiceRepositoty {
     get: (idService: string) => Promise<ServiceEntity>
     save: (service: ServiceEntity) => void
     cancel: (idService: string) => void
-    // finished: (idService: string) => Promise<ServiceEntity>
+    finished: (idService: string) => void
     // comment: (idService: string, commentary: string) => Promise<ServiceEntity>
 }
