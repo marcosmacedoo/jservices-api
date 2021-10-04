@@ -23,11 +23,11 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
     }
 
     public async get(idService: string): Promise<ServiceEntity> {
-        const servicesRef = this.collection.doc(idService)
+        const serviceRef = this.collection.doc(idService)
 
-        const servicesDoc = await servicesRef.get()
+        const serviceDoc = await serviceRef.get()
 
-        const service = servicesDoc.data()
+        const service = serviceDoc.data()
 
         return service as ServiceEntity
     }
@@ -43,5 +43,9 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
         }
 
         await this.collection.add(serviceTemp)
+    }
+
+    public async cancel(idService: string) {
+        await this.collection.doc(idService).update({ status: 'Cancelado' })
     }
 }
