@@ -8,6 +8,11 @@ import { GetServiceQuery } from '../../application/query/GetServiceQuery'
 import { ServiceEntity } from '../../domain/entities/ServiceEntity'
 import { FirestoreServiceRepository } from '../../infrastructure/persistence/firestore/repositories/FirestoreServiceRepository'
 
+interface ResponseMessage {
+    success?: string
+    error?: string
+}
+
 export class ServiceController {
     public async index(request: Request, response: Response) {
         // Utilizar o IoC Container
@@ -32,57 +37,90 @@ export class ServiceController {
 
     public async create(request: Request, response: Response) {
         const service = request.body as ServiceEntity
+        const responseMessage: ResponseMessage = {}
 
         const firestoreServiceRepository = new FirestoreServiceRepository()
         const commandSaveService = new SaveServiceCommand(
             firestoreServiceRepository
         )
 
-        await commandSaveService.execute(service)
+        try {
+            await commandSaveService.execute(service)
 
-        return response.status(201).json(service)
+            responseMessage.success = 'Created service'
+
+            return response.status(201).json(responseMessage)
+        } catch {
+            responseMessage.error = 'Failed to create service'
+
+            return response.status(400).json(responseMessage)
+        }
     }
 
     public async editStatusToCancel(request: Request, response: Response) {
         const { idService } = request.params as { idService: string }
+        const responseMessage: ResponseMessage = {}
 
         const firestoreServiceRepository = new FirestoreServiceRepository()
         const commandCancelService = new CancelServiceCommand(
             firestoreServiceRepository
         )
 
-        const service = await commandCancelService.execute(idService)
+        try {
+            await commandCancelService.execute(idService)
 
-        return response.status(200).json(service)
+            responseMessage.success = 'Created service'
+
+            return response.status(200).json(responseMessage)
+        } catch {
+            responseMessage.error = 'Failed to create service'
+
+            return response.status(400).json(responseMessage)
+        }
     }
 
     public async editStatusToFinished(request: Request, response: Response) {
         const { idService } = request.params as { idService: string }
+        const responseMessage: ResponseMessage = {}
 
         const firestoreServiceRepository = new FirestoreServiceRepository()
         const commandFinishedService = new FinishedServiceCommand(
             firestoreServiceRepository
         )
 
-        const service = await commandFinishedService.execute(idService)
+        try {
+            await commandFinishedService.execute(idService)
 
-        return response.status(200).json(service)
+            responseMessage.success = 'Created service'
+
+            return response.status(200).json(responseMessage)
+        } catch {
+            responseMessage.error = 'Failed to create service'
+
+            return response.status(400).json(responseMessage)
+        }
     }
 
     public async editComments(request: Request, response: Response) {
         const { idService } = request.params as { idService: string }
         const { commentary } = request.body as { commentary: string }
+        const responseMessage: ResponseMessage = {}
 
         const firestoreServiceRepository = new FirestoreServiceRepository()
         const commandCommentService = new CommentServiceCommand(
             firestoreServiceRepository
         )
 
-        const service = await commandCommentService.execute(
-            idService,
-            commentary
-        )
+        try {
+            await commandCommentService.execute(idService, commentary)
 
-        return response.status(200).json(service)
+            responseMessage.success = 'Created service'
+
+            return response.status(200).json(responseMessage)
+        } catch {
+            responseMessage.error = 'Failed to create service'
+
+            return response.status(400).json(responseMessage)
+        }
     }
 }
