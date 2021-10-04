@@ -1,5 +1,6 @@
 import { Request, Response } from 'express'
 import { CancelServiceCommand } from '../../application/command/CancelServiceCommand'
+import { CommentServiceCommand } from '../../application/command/CommentServiceCommand'
 import { FinishedServiceCommand } from '../../application/command/FinishedServiceCommand'
 import { SaveServiceCommand } from '../../application/command/SaveServiceCommand'
 import { GetAllServicesQuery } from '../../application/query/GetAllServicesQuery'
@@ -64,6 +65,23 @@ export class ServiceController {
         )
 
         const service = await commandFinishedService.execute(idService)
+
+        return response.status(200).json(service)
+    }
+
+    public async editComments(request: Request, response: Response) {
+        const { idService } = request.params as { idService: string }
+        const { commentary } = request.body as { commentary: string }
+
+        const firestoreServiceRepository = new FirestoreServiceRepository()
+        const commandCommentService = new CommentServiceCommand(
+            firestoreServiceRepository
+        )
+
+        const service = await commandCommentService.execute(
+            idService,
+            commentary
+        )
 
         return response.status(200).json(service)
     }

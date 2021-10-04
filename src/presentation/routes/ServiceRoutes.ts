@@ -21,5 +21,9 @@ serviceRoutes.put(
     '/services/:idService/edit/status/finished',
     serviceController.editStatusToFinished
 )
+serviceRoutes.put(
+    '/services/:idService/edit/comments/',
+    serviceController.editComments
+)
 
 export default serviceRoutes

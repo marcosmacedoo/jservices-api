@@ -1,4 +1,3 @@
-import { firestore } from 'firebase-admin'
 import { db } from '..'
 import { ServiceEntity } from '../../../../domain/entities/ServiceEntity'
 import { ServiceRepositoty } from '../../../../domain/repositories/ServiceRepository'
@@ -55,5 +54,21 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
         await this.collection
             .doc(idService)
             .update({ status: 'Finalizado', deadline: new Date() })
+    }
+    public async comment(idService: string, commentary: string) {
+        const serviceRef = this.collection.doc(idService)
+
+        const serviceGet = await serviceRef.get()
+
+        const serviceData = serviceGet.data() as ServiceEntity
+
+        const { comments } = serviceData
+
+        if (comments) {
+            const newComments = [...comments, commentary]
+            await serviceRef.update({ comments: newComments })
+        } else {
+            await serviceRef.update({ comments: [commentary] })
+        }
     }
 }
