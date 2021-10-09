@@ -22,20 +22,16 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
     }
 
     public async get(idService: string): Promise<ServiceEntity | {}> {
-        const serviceRef = this.collection
+        const serviceRef = this.collection.doc(idService)
 
-        const serviceDoc = await serviceRef.where('id', '==', idService).get()
+        const serviceDoc = await serviceRef.get()
 
-        let service = {}
+        const service = serviceDoc.data()
 
-        serviceDoc.forEach(doc => {
-            service = doc.data() as ServiceEntity
-        })
-
-        return service
+        return service as ServiceEntity
     }
 
-    public async save(service: ServiceEntity) {
+    public async save(service: ServiceEntity): Promise<{ id: string }> {
         const serviceTemp = {
             ...service,
             created_at: new Date(),
@@ -45,19 +41,21 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
             comments: [],
         }
 
-        await this.collection.add(serviceTemp)
+        const { id } = await this.collection.add(serviceTemp)
+
+        return { id }
     }
 
     public async cancel(idService: string) {
         await this.collection
             .doc(idService)
-            .update({ status: 'cancelado', deadline: new Date() })
+            .update({ status: 'cancelado', updated_at: new Date() })
     }
 
     public async finished(idService: string) {
         await this.collection
             .doc(idService)
-            .update({ status: 'finalizado', deadline: new Date() })
+            .update({ status: 'finalizado', updated_at: new Date() })
     }
 
     public async comment(idService: string, commentary: string) {

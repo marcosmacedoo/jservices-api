@@ -45,11 +45,9 @@ export class ServiceController {
         )
 
         try {
-            await commandSaveService.execute(service)
+            const { id } = await commandSaveService.execute(service)
 
-            responseMessage.success = 'Created service'
-
-            return response.status(201).json(responseMessage)
+            return response.status(201).json({ id })
         } catch {
             responseMessage.error = 'Failed to create service'
 
