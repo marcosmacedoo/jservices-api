@@ -21,14 +21,18 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
         return services as ServiceEntity[]
     }
 
-    public async get(idService: string): Promise<ServiceEntity> {
-        const serviceRef = this.collection.doc(idService)
+    public async get(idService: string): Promise<ServiceEntity | {}> {
+        const serviceRef = this.collection
 
-        const serviceDoc = await serviceRef.get()
+        const serviceDoc = await serviceRef.where('id', '==', idService).get()
 
-        const service = serviceDoc.data()
+        let service = {}
 
-        return service as ServiceEntity
+        serviceDoc.forEach(doc => {
+            service = doc.data() as ServiceEntity
+        })
+
+        return service
     }
 
     public async save(service: ServiceEntity) {
