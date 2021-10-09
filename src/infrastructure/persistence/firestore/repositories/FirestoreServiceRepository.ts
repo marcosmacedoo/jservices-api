@@ -38,7 +38,7 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
             updated_at: new Date(),
             deadline: new Date(service.deadline),
             status: 'Aberto',
-            comment: [],
+            comments: [],
         }
 
         await this.collection.add(serviceTemp)
