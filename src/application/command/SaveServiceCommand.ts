@@ -8,7 +8,7 @@ export class SaveServiceCommand {
         this.serviceRepository = serviceRepository
     }
 
-    public async execute(service: ServiceEntity) {
-        this.serviceRepository.save(service)
+    public async execute(service: ServiceEntity): Promise<{ id: string }> {
+        return this.serviceRepository.save(service)
     }
 }

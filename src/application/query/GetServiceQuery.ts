@@ -8,7 +8,7 @@ export class GetServiceQuery {
         this.serviceRepository = serviceRepository
     }
 
-    public async execute(idService: string): Promise<ServiceEntity> {
+    public async execute(idService: string): Promise<ServiceEntity | {}> {
         return this.serviceRepository.get(idService)
     }
 }

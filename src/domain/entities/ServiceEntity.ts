@@ -1,9 +1,9 @@
 export class ServiceEntity {
-    id?: string
+    id: string
     title: string
     description: string
     budget: number
-    status?: string
+    status: string
     created_at?: Date
     updated_at?: Date
     deadline: Date
