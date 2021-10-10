@@ -3,7 +3,7 @@ import { ServiceEntity } from '../../../../domain/entities/ServiceEntity'
 import { ServiceRepositoty } from '../../../../domain/repositories/ServiceRepository'
 
 export class FirestoreServiceRepository implements ServiceRepositoty {
-    private readonly collection = db.collection('services')
+    private readonly collection = db.collection('services-test')
 
     public async all(): Promise<ServiceEntity[]> {
         const servicesRef = this.collection
