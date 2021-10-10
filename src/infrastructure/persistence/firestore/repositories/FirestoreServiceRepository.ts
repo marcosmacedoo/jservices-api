@@ -37,7 +37,7 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
             created_at: new Date(),
             updated_at: new Date(),
             deadline: new Date(service.deadline),
-            status: 'Aberto',
+            status: 'aberto',
             comments: [],
         }
 
