@@ -9,7 +9,7 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
         const servicesRef = this.collection
 
         // Tratar erro de conexão com o banco
-        const servicesDoc = await servicesRef.get()
+        const servicesDoc = await servicesRef.orderBy('created_at', 'desc').get()
 
         const services = servicesDoc.docs.map((doc) => {
             return {
