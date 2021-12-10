@@ -1,6 +1,18 @@
 import { db } from '..'
 import { ServiceEntity } from '../../../../domain/entities/ServiceEntity'
 import { ServiceRepositoty } from '../../../../domain/repositories/ServiceRepository'
+import { formatDate } from '../../../../utils/formatDate'
+
+interface Timestamp {
+    _seconds: number
+    _nanoseconds: number
+}
+
+interface ServiceFirebase {
+    deadline: Timestamp
+    updated_at: Timestamp
+    created_at: Timestamp
+}
 
 export class FirestoreServiceRepository implements ServiceRepositoty {
     private readonly collection = db.collection('services-test')
@@ -9,12 +21,19 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
         const servicesRef = this.collection
 
         // Tratar erro de conexão com o banco
-        const servicesDoc = await servicesRef.orderBy('created_at', 'desc').get()
+        const servicesDoc = await servicesRef
+            .orderBy('created_at', 'desc')
+            .get()
 
         const services = servicesDoc.docs.map((doc) => {
+            const data = doc.data() as ServiceFirebase
+
             return {
-                id: doc.id,
                 ...doc.data(),
+                id: doc.id,
+                deadline: formatDate(data.deadline._seconds),
+                updated_at: formatDate(data.updated_at._seconds),
+                created_at: formatDate(data.created_at._seconds),
             }
         })
 
@@ -37,7 +56,7 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
             created_at: new Date(),
             updated_at: new Date(),
             deadline: new Date(service.deadline),
-            status: 'aberto',
+            status: 'inProgress',
             comments: [],
         }
 
@@ -65,7 +84,7 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
 
         const serviceData = serviceGet.data() as ServiceEntity
 
-        if (serviceData.status?.toLowerCase() === 'aberto') {
+        if (serviceData.status?.toLowerCase() === 'inProgress') {
             const { comments } = serviceData
 
             if (comments) {
