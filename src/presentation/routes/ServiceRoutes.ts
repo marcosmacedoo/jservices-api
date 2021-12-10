@@ -7,10 +7,7 @@ const serviceController = new ServiceController()
 serviceRoutes.get('/services', serviceController.index)
 serviceRoutes.get('/services/:idService', serviceController.show)
 serviceRoutes.post('/services', serviceController.create)
-serviceRoutes.put(
-    '/services/:idService/edit/status/cancel',
-    serviceController.editStatusToCancel
-)
+serviceRoutes.delete('/services/:idService', serviceController.remove)
 serviceRoutes.put(
     '/services/:idService/edit/status/finished',
     serviceController.editStatusToFinished

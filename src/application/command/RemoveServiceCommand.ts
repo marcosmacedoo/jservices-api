@@ -1,6 +1,6 @@
 import { ServiceRepositoty } from '../../domain/repositories/ServiceRepository'
 
-export class CancelServiceCommand {
+export class RemoveServiceCommand {
     private serviceRepository: ServiceRepositoty
 
     constructor(serviceRepository: ServiceRepositoty) {
@@ -8,6 +8,6 @@ export class CancelServiceCommand {
     }
 
     public async execute(idService: string) {
-        this.serviceRepository.cancel(idService)
+        this.serviceRepository.remove(idService)
     }
 }

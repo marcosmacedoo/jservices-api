@@ -5,7 +5,7 @@ export interface ServiceRepositoty {
     getPerStatus: (status: string) => Promise<ServiceEntity[]>
     get: (idService: string) => Promise<ServiceEntity | {}>
     save: (service: ServiceEntity) => Promise<{ id: string }>
-    cancel: (idService: string) => void
+    remove: (idService: string) => void
     finished: (idService: string) => void
     comment: (idService: string, commentary: string) => void
 }

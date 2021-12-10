@@ -92,10 +92,8 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
         return { id }
     }
 
-    public async cancel(idService: string) {
-        await this.collection
-            .doc(idService)
-            .update({ status: 'cancelado', updated_at: new Date() })
+    public async remove(idService: string) {
+        await this.collection.doc(idService).delete()
     }
 
     public async finished(idService: string) {

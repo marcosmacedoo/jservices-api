@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
 
-import { CancelServiceCommand } from '../../application/command/CancelServiceCommand'
+import { RemoveServiceCommand } from '../../application/command/RemoveServiceCommand'
 import { CommentServiceCommand } from '../../application/command/CommentServiceCommand'
 import { FinishedServiceCommand } from '../../application/command/FinishedServiceCommand'
 import { SaveServiceCommand } from '../../application/command/SaveServiceCommand'
@@ -65,26 +65,17 @@ export class ServiceController {
         }
     }
 
-    public async editStatusToCancel(request: Request, response: Response) {
+    public async remove(request: Request, response: Response) {
         const { idService } = request.params as { idService: string }
-        const responseMessage: ResponseMessage = {}
 
         const firestoreServiceRepository = new FirestoreServiceRepository()
-        const commandCancelService = new CancelServiceCommand(
+        const commandRemoveService = new RemoveServiceCommand(
             firestoreServiceRepository
         )
 
-        try {
-            await commandCancelService.execute(idService)
+        await commandRemoveService.execute(idService)
 
-            responseMessage.success = 'Created service'
-
-            return response.status(200).json(responseMessage)
-        } catch {
-            responseMessage.error = 'Failed to create service'
-
-            return response.status(400).json(responseMessage)
-        }
+        return response.status(200)
     }
 
     public async editStatusToFinished(request: Request, response: Response) {
