@@ -38,7 +38,7 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
         })
 
         const orderedServices = services.sort((serviceA, serviceB) =>
-            serviceA.updated_at > serviceB.updated_at ? 1 : -1
+            serviceA.updated_at > serviceB.updated_at ? -1 : 1
         )
 
         return orderedServices as ServiceEntity[]
@@ -99,7 +99,7 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
     public async finished(idService: string) {
         await this.collection
             .doc(idService)
-            .update({ status: 'finalizado', updated_at: new Date() })
+            .update({ status: 'finished', updated_at: new Date() })
     }
 
     public async comment(idService: string, commentary: string) {
