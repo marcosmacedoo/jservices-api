@@ -17,12 +17,39 @@ interface ServiceFirebase {
 export class FirestoreServiceRepository implements ServiceRepositoty {
     private readonly collection = db.collection('services-test')
 
+    public async getPerStatus(status: string): Promise<ServiceEntity[]> {
+        const servicesRef = this.collection
+
+        // Tratar erro de conexão com o banco
+        const servicesDoc = await servicesRef
+            .where('status', '==', status)
+            .get()
+
+        const services = servicesDoc.docs.map((doc) => {
+            const data = doc.data() as ServiceFirebase
+
+            return {
+                ...doc.data(),
+                id: doc.id,
+                deadline: formatDate(data.deadline._seconds),
+                updated_at: formatDate(data.updated_at._seconds),
+                created_at: formatDate(data.created_at._seconds),
+            }
+        })
+
+        const orderedServices = services.sort((serviceA, serviceB) =>
+            serviceA.updated_at > serviceB.updated_at ? 1 : -1
+        )
+
+        return orderedServices as ServiceEntity[]
+    }
+
     public async all(): Promise<ServiceEntity[]> {
         const servicesRef = this.collection
 
         // Tratar erro de conexão com o banco
         const servicesDoc = await servicesRef
-            .orderBy('created_at', 'desc')
+            .orderBy('updated_at', 'desc')
             .get()
 
         const services = servicesDoc.docs.map((doc) => {

@@ -1,10 +1,12 @@
 import { Request, Response } from 'express'
+
 import { CancelServiceCommand } from '../../application/command/CancelServiceCommand'
 import { CommentServiceCommand } from '../../application/command/CommentServiceCommand'
 import { FinishedServiceCommand } from '../../application/command/FinishedServiceCommand'
 import { SaveServiceCommand } from '../../application/command/SaveServiceCommand'
 import { GetAllServicesQuery } from '../../application/query/GetAllServicesQuery'
 import { GetServiceQuery } from '../../application/query/GetServiceQuery'
+import { GetServicesPerStatus } from '../../application/query/GetServicesPerStatus'
 import { ServiceEntity } from '../../domain/entities/ServiceEntity'
 import { FirestoreServiceRepository } from '../../infrastructure/persistence/firestore/repositories/FirestoreServiceRepository'
 
@@ -15,11 +17,19 @@ interface ResponseMessage {
 
 export class ServiceController {
     public async index(request: Request, response: Response) {
-        // Utilizar o IoC Container
-        const firestoreServiceRepository = new FirestoreServiceRepository()
-        const query = new GetAllServicesQuery(firestoreServiceRepository)
+        const { status } = request.query as { status?: string }
 
-        const services = await query.execute()
+        const firestoreServiceRepository = new FirestoreServiceRepository()
+
+        if (!status) {
+            const query = new GetAllServicesQuery(firestoreServiceRepository)
+            const services = await query.execute()
+
+            return response.status(200).json(services)
+        }
+
+        const query = new GetServicesPerStatus(firestoreServiceRepository)
+        const services = await query.execute(status)
 
         return response.status(200).json(services)
     }
