@@ -72,7 +72,14 @@ export class FirestoreServiceRepository implements ServiceRepositoty {
 
         const serviceDoc = await serviceRef.get()
 
-        const service = serviceDoc.data()
+        const data = serviceDoc.data() as ServiceFirebase
+
+        const service = {
+            ...serviceDoc.data(),
+            deadline: formatDate(data.deadline._seconds),
+            updated_at: formatDate(data.updated_at._seconds),
+            created_at: formatDate(data.created_at._seconds),
+        }
 
         return service as ServiceEntity
     }
